@@ -19,8 +19,13 @@
 init_check://check if r0 is out of range
 	cmp r0,#100
 	IT GT//T means then and EQ will be a condition fields for add
-	movs r4,#-1 //So here we can use GT this condition field
-	b L
+	movgt r4,#-1 //So here we can use GT this condition field
+	bgt L
+	cmp r0,#0
+	IT LE
+	movle r4,#-1
+	ble L
+	bx lr
 
 calculate://Basic idea is that N>=2, then f(N) needs (N-1) addtions
 	adds r3,r3,#1 //Control the addtions times
@@ -39,7 +44,7 @@ fib:
 	//TODO
 	cmp r0,#1
 	ITT EQ
-	addeq r4,r4,r1
+	addeq r4,r4,#1//addeq r4,r4,r1
 	bxeq lr;
 	str lr,[r5]
 	bl calculate
