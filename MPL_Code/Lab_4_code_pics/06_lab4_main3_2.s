@@ -54,8 +54,8 @@ GPIO_init:
 
 /*LED Finite State Machine
  *Two State
- *0=>LED Running State(Default State)
- *1=>LED Stop State
+ *-1=>LED Stop State
+ *1=>LED Running State(Default State)
  */
 
 main:
@@ -112,7 +112,7 @@ DisplayLED:
 			orreq r3,r3,#1
 	pop {r0}
 
-	strb r3,[r1]
+	strh r3,[r1]
 	add r2,r2,r4
 	str r2,[r0]
 
@@ -137,9 +137,10 @@ Delay:
 		IT EQ
 			addeq r7,r7,r5
 		cmp r7,#2 //1
-		ITTT EQ
+		ITTTT EQ
 			rsbeq r8,r8,#0
 			moveq r7,#0
+			ldreq r6,#=0xFFFFFFFF
 			beq DisplayLED
 		//bne Check
 		cmp r7,#0
