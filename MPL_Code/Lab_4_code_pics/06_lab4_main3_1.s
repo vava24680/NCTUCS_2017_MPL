@@ -70,7 +70,7 @@ DisplayLED:
 	bx lr
 
 Delay:
-	ldr r3,=#2000
+	ldr r3,=#2300
 	L1: ldr r4,=#610
 	L2: subs r4,#1
 	bne L2
