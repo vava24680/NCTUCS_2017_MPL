@@ -73,11 +73,11 @@ main:
 	/*DisplayLED Initilization*/
 		mov r2, #1
 		ldr r0, =leds
-		strb r2, [R0]
+		str r2, [R0]
 		ldr r1,=GPIOB_ODR
 		ldr r3,=#0x0000FFFF
-		strb r3,[r1]
-		ldr r3,=#0xFFFFFFE7
+		strh r3,[r1]
+		ldr r3,=#0x0000FFE7
 		mov r4,#-1 //shift direction, 1=>left, -1=>right
 		push {r0-r4}
 	/*------------------------*/
@@ -88,9 +88,8 @@ Loop:
 
 DisplayLED:
 	/*Using Current State to Change what LED will do*/
-	cmp r8,#1
-	IT NE
-		bne Delay
+	cmp r8,#-1
+		beq Delay
 	/*----------------------------------------------*/
 	pop {r0-r4}
 	cmp r2,#4
@@ -110,6 +109,8 @@ DisplayLED:
 		cmp r0,#0
 		IT EQ
 			orreq r3,r3,#1
+		ldr r0,=#0x0000FFFF
+		and r3,r3,r0
 	pop {r0}
 
 	strh r3,[r1]
@@ -120,7 +121,7 @@ DisplayLED:
 	bx lr
 
 Delay:
-	ldr r1,=#350000
+	ldr r1,=#250000
 	ldr r0, =GPIOC_IDR
 	Check:
 	/*Get the input value*/
@@ -137,12 +138,16 @@ Delay:
 		IT EQ
 			addeq r7,r7,r5
 		cmp r7,#2 //1
-		ITTTT EQ
+		ITTT EQ
 			rsbeq r8,r8,#0
 			moveq r7,#0
-			ldreq r6,#=0xFFFFFFFF
-			beq DisplayLED
-		//bne Check
+			beq Loop
+			/*
+			 *Not beq DisplayLED nor bleq DisplayLED
+			 *If beq DisplayLED, when it's done, it will go to line 87(B Loop) so DisplayLED will do AGAIN.
+			 *Obviously IT IS A WRONG BEHAVIOR
+			 *The CORRECT FLOW is that when DisplayLED is done, it will do to line 86(BL Delay).
+			*/
 		cmp r7,#0
 		IT EQ
 			cmpeq r6,#0
