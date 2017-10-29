@@ -4,7 +4,6 @@
 .data
 	user_stack: .zero 128
 	arr: .byte 0x7E, 0x30, 0x6D, 0x79, 0x33, 0x5B, 0x5F, 0x70, 0x7F, 0x73, 0x77, 0x1F, 0x4E, 0x3D, 0x4F, 0x47 //TODO: put 0 to F 7-Seg LED pattern here
-	test_v: .int 24
 .text
 	.global main
 	.equ RCC_AHB2ENR, 0x4002104C
@@ -89,39 +88,30 @@ main:
 	nop
 	nop
 	nop
-	ldr r0,=#0x01
+	ldr r0,=#0x01 //digit 0 ADDRESS on 7-SEG LED
 	ldr r2,=arr
-	ldr r4,[r2]
 	LOOP:
-		ldr r3,=#0x10 //counter
+		ldr r3,=#0x0 //Counter also byte read indicator
 		bl Display0toF
 	b LOOP
 
 Display0toF:
 	//TODO: Display 0 to F at first digit on 7-SEG LED. Display one per second.
-	cmp r3,#12
-	IT EQ
-		ldreq r4,[r2,#4]
-	cmp r3,#8
-	IT EQ
-		ldreq r4,[r2,#8]
-	cmp r3,#4
-	IT EQ
-		ldreq r4,[r2,#12]
+	ldrb r4,[r2,r3]
 
 	and r1,r4,#0x000000FF //r1 will get the 8-lsb bits of r4
-	ror r4,r4,#8 //Rotate right 8 bits, e.g:XXXXXXEF will be EFXXXXXX
 	push {lr}
 	bl MAX7219Send
 	pop {lr}
 	push {r3-r4,lr}
 	bl Delay
 	pop {r3-r4,lr}
-	subs r3,r3,#1
-	ITT LE
-		ldrle r4,[r2]
-		bxle lr
-	bgt Display0toF
+	add r3,r3,#1
+	cmp r3,#16
+	ITT GE
+		ldrge r4,[r2]
+		bxge lr
+	blt Display0toF
 
 MAX7219Send:
 	//input parameter: r0 is ADDRESS , r1 is DATA
