@@ -108,8 +108,7 @@ Display0toF:
 	pop {r3-r4,lr}
 	add r3,r3,#1
 	cmp r3,#16
-	ITT GE
-		ldrge r4,[r2]
+	IT GE
 		bxge lr
 	blt Display0toF
 
