@@ -119,7 +119,7 @@ MODULO:
 	mov r4, r1
 	ldr r5, =#10
 	udiv r6, r4, r5 //r6 is quotient
-	mls r1, r6, r5, r4 //r0=r4-r6*r5
+	mls r1, r6, r5, r4 //r1=r4-r6*r5
 	mov r2,r6
 	bx lr
 
@@ -150,7 +150,7 @@ main:
 		ldr r2,=#0x0
 		ldr r7,=#0x0
 	LOOP:
-		ldr r3,=#250000
+		ldr r3,=#115000
 		ldr r6,=#0xFFFFFFFF
 		bl Debounce
 		cmp r7,#2
@@ -160,17 +160,9 @@ main:
 				bleq Fib
 				/*Since the instruction limit, pop is at the end of Fib function*/
 		cmp r7,#2
-			IT EQ
+			ITT EQ
+				popeq {r4-r8}
 				bleq OutputMAX7219
-		/*cmp r7,#4
-		ITTT EQ
-			ldreq r0,=#0x1
-			ldreq r1,=#0x0
-			bleq MAX7219Send
-		cmp r7,#4
-		ITT EQ
-			ldreq r0,=#0x2
-			bleq MAX7219_Blank*/
 		cmp r7,#4
 			beq INITITAL
 		ldr r7,=#0x0
@@ -196,8 +188,9 @@ Debounce:
 	/*--------------------------------------------*/
 	/*State Changing and Checking*/
 		cmp r7,#1 //1
-		IT EQ
+		ITT EQ
 			addeq r7,r7,r5
+			subeq r3,r3,#1
 		cmp r7,#2 //1
 		IT EQ
 			bxeq lr
@@ -224,16 +217,10 @@ Debounce:
 			cmpeq r6,#0
 			IT EQ
 				moveq r7,#1
-	subs r3,r3,#1
+	cmp r3,#0
 	bgt Debounce
 	/*When executing this code segment, r7 will be 0 or 1*/
-	cmp r7,#0 /*button is not pushed more than one second, let it re-debounce*/
-		IT EQ
-			ldreq r3,=#250000
-	cmp r7,#1 /*button is pushed more than one second, change to new-state r3*/
-		ITT EQ
-			ldreq r3,=#250000
-			moveq r7,#3
+	mov r7,#3
 	/*---------------------------------------------------*/
 	b Debounce
 
@@ -245,7 +232,7 @@ Debounce:
  *r3 : AND value of quotient and remainder
  *r4 : Clone of current fib value, comparing user_stack
  *r5 : Constant 100000000
-*/
+ */
 OutputMAX7219:
 	push {r0-r8,lr}
 	ldr r0,=#0x0
@@ -278,10 +265,6 @@ OutputMAX7219:
 			ITT NE
 				addne r0,r0,#1
 				blne MAX7219Send
-		/*cmp r3,#0
-			ITT EQ
-				addeq r0,r0,#1
-				bleq MAX7219_Blank*/
 		cmp r3,#0
 			IT NE
 			movne r1,r2
@@ -306,7 +289,6 @@ Fib:
 		movne r4,r1
 		addne r1,r1,r2
 		movne r2,r4
-	pop {r4-r8}
 	bx lr
 
 MAX7219Send:
