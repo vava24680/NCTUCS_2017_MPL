@@ -95,7 +95,7 @@ MAX7219Send:
 	bx lr
 
 MAX7219_init:
-//TODO: Initial max7219 registers.
+	//TODO: Initial max7219 registers.
 	push {lr}
 	ldr r3,=GPIOB_ODR
 
