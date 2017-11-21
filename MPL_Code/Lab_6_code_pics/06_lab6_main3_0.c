@@ -11,23 +11,27 @@ extern void MAX7219Send(unsigned char address, unsigned char data);
 * 0: success
 * -1: illegal data range(out of 8 digits range)
 */
-void display(int data, int num_digs)
+int display(int data, int num_digs)
 {
+	if(num_digs > 8)
+		return -1;
 	int remainder, i;
-	for(i=0;i<num_digs-1;i++)
+	for(i=0; i<num_digs; i++)
 	{
 		remainder = data%10;
 		MAX7219Send(i+1, remainder);
 		data/=10;
 	}
 	MAX7219Send(i+1,0);
+	return 0;
 }
 
 int main()
 {
 	int student_id = 416005;
+	int result;
 	GPIO_init();
 	MAX7219_init();
-	display(student_id, 7);
+	result = display(student_id, 6);
 	return 0;
 }
