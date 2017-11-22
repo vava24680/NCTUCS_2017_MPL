@@ -17,7 +17,14 @@ const int match_matrix[4][4]={
 	{1,2,3,10},
 	{4,5,6,11},
 	{7,8,9,12},
-	{-1,0,-1,13}
+	{0,0,0,13}
+};
+
+int button_state[4][4]={
+	{0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0}
 };
 
 /*Open GPIOB*/
@@ -39,6 +46,10 @@ void seven_segment_blank(int num_digts)
 	}
 }
 
+void clear_seven_segment_all()
+{
+	seven_segment_blank(8);
+}
 /*Use GPIOB 3,4,5 as output mode*/
 void seven_segment_int()
 {
@@ -61,7 +72,7 @@ void seven_segment_int()
 	MAX7219Send(0x0CU,0x01U);
 	MAX7219Send(0x0FU,0x00U);
 	MAX7219Send(0x09U,0xFFU);
-	MAX7219Send(0x0BU,0x01U);
+	MAX7219Send(0x0BU,0x07U);
 	MAX7219Send(0x0AU,0x09U);
 	seven_segment_blank(2);
 }
@@ -103,6 +114,28 @@ void keypad_init()
 	GPIOB->PUPDR = GPIOB->PUPDR | GPIO_PUPDR_PUPD14_1;
 	GPIOB->PUPDR = GPIOB->PUPDR | GPIO_PUPDR_PUPD15_1;
 }
+
+void display(int display_number)
+{
+	clear_seven_segment_all();
+	uint32_t address = 0x01;
+	int remainder;
+	int flag=0;
+	if(display_number<0)
+	{
+		display_number*=(-1);
+		flag=1;
+	}
+	do
+	{
+		remainder = display_number%10;
+		MAX7219Send(address, remainder);
+		address++;
+		display_number/=10;
+	} while(display_number!=0);
+	if(flag)
+		MAX7219Send(address, 10U);
+}
 /* TODO: scan keypad value
 * return:
 * >=0: key pressed value
@@ -111,17 +144,11 @@ void keypad_init()
 void keypad_scan(void)
 {
 	int32_t input_value;
-	uint32_t y_value;
 	uint32_t mask = 0x00U;//Not Umask
-	uint32_t button_push_times;
-	int32_t total_button_value;
-	int32_t temp_button_value;
+	int32_t total_button_value = 0;
 	//MAX7219 blank;
 	while(1)
 	{
-		button_push_times = 0;
-		total_button_value = 0;
-		temp_button_value = -2;
 		for(int i = 0; i < 4; i++)
 		{
 			mask = (0x01U << x_pin[i]);
@@ -137,51 +164,102 @@ void keypad_scan(void)
 			/*---------------------------------------------------------------------*/
 			input_value = input_value >> 12;
 			input_value &= 0x0000000F;
-			if(input_value==8)
+			if(input_value & 0x01U)
 			{
-				y_value = 3;
-			}
-			else if(input_value==4)
-			{
-				y_value = 2;
+				switch (button_state[0][3-i]) {
+					case 0:
+						button_state[0][3-i] = 1;
+						break;
+					case 1:
+						button_state[0][3-i] = 2;
+						break;
+					case 2:
+						button_state[0][3-i] = 2;
+						break;
+				}
 			}
 			else
 			{
-				y_value = input_value-1;
+				button_state[0][3-i] = 0;
 			}
-			if(input_value==0)
-				continue;
-			if(input_value==-1)
-			temp_button_value = match_matrix[y_value][3-i];
-			total_button_value += temp_button_value;
-			button_push_times++;
+
+			if(input_value & 0x02U)
+			{
+				switch (button_state[1][3-i]) {
+					case 0:
+						button_state[1][3-i] = 1;
+						break;
+					case 1:
+						button_state[1][3-i] = 2;
+						break;
+					case 2:
+						button_state[1][3-i] = 2;
+						break;
+				}
+			}
+			else
+			{
+				button_state[1][3-i] = 0;
+			}
+
+			if(input_value & 0x04U)
+			{
+				switch (button_state[2][3-i]) {
+					case 0:
+						button_state[2][3-i] = 1;
+						break;
+					case 1:
+						button_state[2][3-i] = 2;
+						break;
+					case 2:
+						button_state[2][3-i] = 2;
+						break;
+				}
+			}
+			else
+			{
+				button_state[2][3-i] = 0;
+			}
+
+			if(input_value & 0x08U)
+			{
+				switch (button_state[3][3-i]) {
+					case 0:
+						button_state[3][3-i] = 1;
+						break;
+					case 1:
+						button_state[3][3-i] = 2;
+						break;
+					case 2:
+						button_state[3][3-i] = 2;
+						break;
+				}
+			}
+			else
+			{
+				button_state[3][3-i] = 0;
+			}
+			for(int j = 0; j < 4; j++)
+			{
+				if(button_state[j][3-i])
+				{
+					total_button_value += match_matrix[j][3-i];
+				}
+			}
 		}
+		if(button_state[3][0] || button_state[3][3])
+		{
+			total_button_value = 0;
+		}
+		display(total_button_value);
 	}
 }
 int main(void)
 {
 	STACK_INIT();
-	char result=0;
 	Essential_GPIO_init();
 	seven_segment_int();
 	keypad_init();
 	keypad_scan();
-	/*while(1)
-	{
-		result=keypad_scan();
-		if(result>=0 && result<16)
-		{
-			uint32_t address=1;
-			do
-			{
-				MAX7219Send(address,result%10);
-				result/=10;
-				address++;
-			}
-			while(result);
-			if(address==2)
-				MAX7219Send(address,0x0FU);
-		}
-	}*/
 	return 0;
 }
