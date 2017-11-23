@@ -117,7 +117,7 @@ void keypad_init()
 
 void display(int display_number)
 {
-	clear_seven_segment_all();
+	//clear_seven_segment_all();
 	uint32_t address = 0x01;
 	int remainder;
 	int flag=0;
@@ -147,6 +147,7 @@ void keypad_scan(void)
 	uint32_t mask = 0x00U;//Not Umask
 	int32_t total_button_value = 0;
 	//MAX7219 blank;
+	clear_seven_segment_all();
 	while(1)
 	{
 		for(int i = 0; i < 4; i++)
@@ -241,14 +242,15 @@ void keypad_scan(void)
 			}
 			for(int j = 0; j < 4; j++)
 			{
-				if(button_state[j][3-i])
+				if(button_state[j][3-i] == 1)
 				{
 					total_button_value += match_matrix[j][3-i];
 				}
 			}
 		}
-		if(button_state[3][0] || button_state[3][3])
+		if(button_state[3][0] || button_state[3][2])
 		{
+			clear_seven_segment_all();
 			total_button_value = 0;
 		}
 		display(total_button_value);
