@@ -2,3 +2,4 @@
 !/MPL_Code/
 *.PNG
 *.png
+!/STM32_NUCLEO*.png
