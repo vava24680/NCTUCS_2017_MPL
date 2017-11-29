@@ -39,7 +39,7 @@ Delay:
 	nop
 	nop
 	nop
-	//push {r4-r9}
+	push {r4-r9}
 	ldr r0, =#0x0
 	ldr r4, =GPIOC_IDR
 	ldr r1,=#250000
@@ -60,9 +60,9 @@ Delay:
 		IT EQ
 			addeq r7,r7,r5
 		cmp r7,#2 //1
-		ITT EQ
+		ITTT EQ
 			ldreq r0, =0x1
-			//popeq {r4-r9}
+			popeq {r4-r9}
 			bxeq lr
 		cmp r7,#0
 		IT EQ
@@ -73,5 +73,5 @@ Delay:
 	cmp r1,#0
 	bne Check
 	/*---------------------------*/
-	//pop {r4-r9}
+	pop {r4-r9}
 	bx lr

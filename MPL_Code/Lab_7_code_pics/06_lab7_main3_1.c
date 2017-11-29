@@ -75,37 +75,6 @@ void SystemClock_Config(int turn)
 	RCC->CFGR = RCC_CFGR;
 }
 
-int user_press_button(void)
-{
-	int GPIOC_IDR_13 = ( (GPIOC->IDR >> 13U) & 0x01);
-	if(GPIOC_IDR_13 == 0)
-	{
-		current_state = 1;
-	}
-	else
-	{
-		if(current_state==1)
-		{
-			current_state = 0;
-			return 1;
-		}
-	}
-	return 0;
-	/*if(current_state == 1)
-	{
-		current_state += GPIOC_ODR_13;
-	}
-	if(current_state == 2)
-	{
-		current_state = 0;
-		debounce_array = 0xFFFFFFFF;
-		return 1;
-	}
-	debounce_array = (debounce_array << 1) | GPIOC_ODR_13;
-	current_state = debounce_array==0xFFFF0000 ? 1 : 0;*/
-	return 0;
-}
-
 int main(void)
 {
 	int turn = 0;
@@ -115,14 +84,8 @@ int main(void)
 	STACK_INIT();
 	while(1)
 	{
-		/*if(user_press_button())
-		{
-			turn++;
-			SystemClock_Config(turn);
-		}*/
 		GPIOB->BSRR = GPIOB->BSRR & (~GPIO_BSRR_BS3_Msk);
 		GPIOB->BRR = GPIOB->BRR | GPIO_BRR_BR3;
-		//WaitOneSecond();
 		result = Delay();
 		if(result)
 		{
