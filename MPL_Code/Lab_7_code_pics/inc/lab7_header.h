@@ -88,6 +88,15 @@ typedef struct
   __IO uint32_t OR3;         /*!< TIM option register 3,                    Address offset: 0x64 */
 } TIM_TypeDef;
 
+#define GPIO_Pin_8 8
+#define GPIO_Pin_9 9
+#define GPIO_Pin_10 10
+#define GPIO_Pin_11 11
+#define GPIO_Pin_12 12
+#define GPIO_Pin_13 13
+#define GPIO_Pin_14 (14U)
+#define GPIO_Pin_15 (15U)
+
 #define PERIPH_BASE           ((uint32_t)0x40000000U) /*!< Peripheral base address */
 #define AHB1PERIPH_BASE       (PERIPH_BASE + 0x00020000U)
 #define AHB2PERIPH_BASE       (PERIPH_BASE + 0x08000000U)
@@ -175,6 +184,30 @@ typedef struct
 #define TIM_SR_UIF_Pos            (0U)
 #define TIM_SR_UIF_Msk            (0x1U << TIM_SR_UIF_Pos)                     /*!< 0x00000001 */
 #define TIM_SR_UIF                TIM_SR_UIF_Msk                               /*!<Update interrupt Flag */
+#define TIM_CCMR1_CC2S_Pos        (8U)
+#define TIM_CCMR1_CC2S_Msk        (0x3U << TIM_CCMR1_CC2S_Pos)                 /*!< 0x00000300 */
+#define TIM_CCMR1_CC2S            TIM_CCMR1_CC2S_Msk                           /*!<CC2S[1:0] bits (Capture/Compare 2 Selection) */
+#define TIM_CCMR1_CC2S_0          (0x1U << TIM_CCMR1_CC2S_Pos)                 /*!< 0x00000100 */
+#define TIM_CCMR1_CC2S_1          (0x2U << TIM_CCMR1_CC2S_Pos)                 /*!< 0x00000200 */
+#define TIM_CCMR1_OC2M_Pos        (12U)
+#define TIM_CCMR1_OC2M_Msk        (0x1007U << TIM_CCMR1_OC2M_Pos)              /*!< 0x01007000 */
+#define TIM_CCMR1_OC2M            TIM_CCMR1_OC2M_Msk                           /*!<OC2M[2:0] bits (Output Compare 2 Mode) */
+#define TIM_CCMR1_OC2M_0          (0x0001U << TIM_CCMR1_OC2M_Pos)              /*!< 0x00001000 */
+#define TIM_CCMR1_OC2M_1          (0x0002U << TIM_CCMR1_OC2M_Pos)              /*!< 0x00002000 */
+#define TIM_CCMR1_OC2M_2          (0x0004U << TIM_CCMR1_OC2M_Pos)              /*!< 0x00004000 */
+#define TIM_CCMR1_OC2M_3          (0x1000U << TIM_CCMR1_OC2M_Pos)              /*!< 0x01000000 */
+#define TIM_CCER_CC2E_Pos         (4U)
+#define TIM_CCER_CC2E_Msk         (0x1U << TIM_CCER_CC2E_Pos)                  /*!< 0x00000010 */
+#define TIM_CCER_CC2E             TIM_CCER_CC2E_Msk                            /*!<Capture/Compare 2 output enable */
+#define TIM_CCER_CC2P_Pos         (5U)
+#define TIM_CCER_CC2P_Msk         (0x1U << TIM_CCER_CC2P_Pos)                  /*!< 0x00000020 */
+#define TIM_CCER_CC2P             TIM_CCER_CC2P_Msk                            /*!<Capture/Compare 2 output Polarity */
+#define TIM_CCR2_CCR2_Pos         (0U)
+#define TIM_CCR2_CCR2_Msk         (0xFFFFU << TIM_CCR2_CCR2_Pos)               /*!< 0x0000FFFF */
+#define TIM_CCR2_CCR2             TIM_CCR2_CCR2_Msk                            /*!<Capture/Compare 2 Value */
+#define TIM_DIER_UIE_Pos          (0U)
+#define TIM_DIER_UIE_Msk          (0x1U << TIM_DIER_UIE_Pos)                   /*!< 0x00000001 */
+#define TIM_DIER_UIE              TIM_DIER_UIE_Msk                             /*!<Update interrupt enable */
 
 #define GPIO_MODER_MODE3_Pos                 (6U)
 #define GPIO_MODER_MODE3_Msk                 (0x3U << GPIO_MODER_MODE3_Pos)    /*!< 0x000000C0 */
@@ -191,11 +224,54 @@ typedef struct
 #define GPIO_MODER_MODE5                     GPIO_MODER_MODE5_Msk
 #define GPIO_MODER_MODE5_0                   (0x1U << GPIO_MODER_MODE5_Pos)    /*!< 0x00000400 */
 #define GPIO_MODER_MODE5_1                   (0x2U << GPIO_MODER_MODE5_Pos)    /*!< 0x00000800 */
+#define GPIO_MODER_MODE8_Pos                 (16U)
+#define GPIO_MODER_MODE8_Msk                 (0x3U << GPIO_MODER_MODE8_Pos)    /*!< 0x00030000 */
+#define GPIO_MODER_MODE8                     GPIO_MODER_MODE8_Msk
+#define GPIO_MODER_MODE8_0                   (0x1U << GPIO_MODER_MODE8_Pos)    /*!< 0x00010000 */
+#define GPIO_MODER_MODE8_1                   (0x2U << GPIO_MODER_MODE8_Pos)    /*!< 0x00020000 */
+#define GPIO_MODER_MODE9_Pos                 (18U)
+#define GPIO_MODER_MODE9_Msk                 (0x3U << GPIO_MODER_MODE9_Pos)    /*!< 0x000C0000 */
+#define GPIO_MODER_MODE9                     GPIO_MODER_MODE9_Msk
+#define GPIO_MODER_MODE9_0                   (0x1U << GPIO_MODER_MODE9_Pos)    /*!< 0x00040000 */
+#define GPIO_MODER_MODE9_1                   (0x2U << GPIO_MODER_MODE9_Pos)    /*!< 0x00080000 */
+#define GPIO_MODER_MODE10_Pos                (20U)
+#define GPIO_MODER_MODE10_Msk                (0x3U << GPIO_MODER_MODE10_Pos)   /*!< 0x00300000 */
+#define GPIO_MODER_MODE10                    GPIO_MODER_MODE10_Msk
+#define GPIO_MODER_MODE10_0                  (0x1U << GPIO_MODER_MODE10_Pos)   /*!< 0x00100000 */
+#define GPIO_MODER_MODE10_1                  (0x2U << GPIO_MODER_MODE10_Pos)   /*!< 0x00200000 */
+#define GPIO_MODER_MODE11_Pos                (22U)
+#define GPIO_MODER_MODE11_Msk                (0x3U << GPIO_MODER_MODE11_Pos)   /*!< 0x00C00000 */
+#define GPIO_MODER_MODE11                    GPIO_MODER_MODE11_Msk
+#define GPIO_MODER_MODE11_0                  (0x1U << GPIO_MODER_MODE11_Pos)   /*!< 0x00400000 */
+#define GPIO_MODER_MODE11_1                  (0x2U << GPIO_MODER_MODE11_Pos)   /*!< 0x00800000 */
+#define GPIO_MODER_MODE12_Pos                (24U)
+#define GPIO_MODER_MODE12_Msk                (0x3U << GPIO_MODER_MODE12_Pos)   /*!< 0x03000000 */
+#define GPIO_MODER_MODE12                    GPIO_MODER_MODE12_Msk
+#define GPIO_MODER_MODE12_0                  (0x1U << GPIO_MODER_MODE12_Pos)   /*!< 0x01000000 */
+#define GPIO_MODER_MODE12_1                  (0x2U << GPIO_MODER_MODE12_Pos)   /*!< 0x02000000 */
 #define GPIO_MODER_MODE13_Pos                (26U)
 #define GPIO_MODER_MODE13_Msk                (0x3U << GPIO_MODER_MODE13_Pos)   /*!< 0x0C000000 */
 #define GPIO_MODER_MODE13                    GPIO_MODER_MODE13_Msk
 #define GPIO_MODER_MODE13_0                  (0x1U << GPIO_MODER_MODE13_Pos)   /*!< 0x04000000 */
 #define GPIO_MODER_MODE13_1                  (0x2U << GPIO_MODER_MODE13_Pos)   /*!< 0x08000000 */
+#define GPIO_MODER_MODE14_Pos                (28U)
+#define GPIO_MODER_MODE14_Msk                (0x3U << GPIO_MODER_MODE14_Pos)   /*!< 0x30000000 */
+#define GPIO_MODER_MODE14                    GPIO_MODER_MODE14_Msk
+#define GPIO_MODER_MODE14_0                  (0x1U << GPIO_MODER_MODE14_Pos)   /*!< 0x10000000 */
+#define GPIO_MODER_MODE14_1                  (0x2U << GPIO_MODER_MODE14_Pos)   /*!< 0x20000000 */
+#define GPIO_MODER_MODE15_Pos                (30U)
+#define GPIO_MODER_MODE15_Msk                (0x3U << GPIO_MODER_MODE15_Pos)   /*!< 0xC0000000 */
+#define GPIO_MODER_MODE15                    GPIO_MODER_MODE15_Msk
+#define GPIO_MODER_MODE15_0                  (0x1U << GPIO_MODER_MODE15_Pos)   /*!< 0x40000000 */
+#define GPIO_MODER_MODE15_1                  (0x2U << GPIO_MODER_MODE15_Pos)   /*!< 0x80000000 */
+
+#define GPIO_AFRL_AFSEL3_Pos                 (12U)
+#define GPIO_AFRL_AFSEL3_Msk                 (0xFU << GPIO_AFRL_AFSEL3_Pos)    /*!< 0x0000F000 */
+#define GPIO_AFRL_AFSEL3                     GPIO_AFRL_AFSEL3_Msk
+#define GPIO_AFRL_AFSEL3_0                   (0x1U << GPIO_AFRL_AFSEL3_Pos)    /*!< 0x00001000 */
+#define GPIO_AFRL_AFSEL3_1                   (0x2U << GPIO_AFRL_AFSEL3_Pos)    /*!< 0x00002000 */
+#define GPIO_AFRL_AFSEL3_2                   (0x4U << GPIO_AFRL_AFSEL3_Pos)    /*!< 0x00004000 */
+#define GPIO_AFRL_AFSEL3_3                   (0x8U << GPIO_AFRL_AFSEL3_Pos)    /*!< 0x00008000 */
 
 #define GPIO_OSPEEDR_OSPEED3_Pos             (6U)
 #define GPIO_OSPEEDR_OSPEED3_Msk             (0x3U << GPIO_OSPEEDR_OSPEED3_Pos) /*!< 0x000000C0 */
@@ -212,12 +288,47 @@ typedef struct
 #define GPIO_OSPEEDR_OSPEED5                 GPIO_OSPEEDR_OSPEED5_Msk
 #define GPIO_OSPEEDR_OSPEED5_0               (0x1U << GPIO_OSPEEDR_OSPEED5_Pos) /*!< 0x00000400 */
 #define GPIO_OSPEEDR_OSPEED5_1               (0x2U << GPIO_OSPEEDR_OSPEED5_Pos) /*!< 0x00000800 */
+#define GPIO_OSPEEDR_OSPEED8_Pos             (16U)
+#define GPIO_OSPEEDR_OSPEED8_Msk             (0x3U << GPIO_OSPEEDR_OSPEED8_Pos) /*!< 0x00030000 */
+#define GPIO_OSPEEDR_OSPEED8                 GPIO_OSPEEDR_OSPEED8_Msk
+#define GPIO_OSPEEDR_OSPEED8_0               (0x1U << GPIO_OSPEEDR_OSPEED8_Pos) /*!< 0x00010000 */
+#define GPIO_OSPEEDR_OSPEED8_1               (0x2U << GPIO_OSPEEDR_OSPEED8_Pos) /*!< 0x00020000 */
+#define GPIO_OSPEEDR_OSPEED9_Pos             (18U)
+#define GPIO_OSPEEDR_OSPEED9_Msk             (0x3U << GPIO_OSPEEDR_OSPEED9_Pos) /*!< 0x000C0000 */
+#define GPIO_OSPEEDR_OSPEED9                 GPIO_OSPEEDR_OSPEED9_Msk
+#define GPIO_OSPEEDR_OSPEED9_0               (0x1U << GPIO_OSPEEDR_OSPEED9_Pos) /*!< 0x00040000 */
+#define GPIO_OSPEEDR_OSPEED9_1               (0x2U << GPIO_OSPEEDR_OSPEED9_Pos) /*!< 0x00080000 */
+#define GPIO_OSPEEDR_OSPEED10_Pos            (20U)
+#define GPIO_OSPEEDR_OSPEED10_Msk            (0x3U << GPIO_OSPEEDR_OSPEED10_Pos) /*!< 0x00300000 */
+#define GPIO_OSPEEDR_OSPEED10                GPIO_OSPEEDR_OSPEED10_Msk
+#define GPIO_OSPEEDR_OSPEED10_0              (0x1U << GPIO_OSPEEDR_OSPEED10_Pos) /*!< 0x00100000 */
+#define GPIO_OSPEEDR_OSPEED10_1              (0x2U << GPIO_OSPEEDR_OSPEED10_Pos) /*!< 0x00200000 */
+#define GPIO_OSPEEDR_OSPEED11_Pos            (22U)
+#define GPIO_OSPEEDR_OSPEED11_Msk            (0x3U << GPIO_OSPEEDR_OSPEED11_Pos) /*!< 0x00C00000 */
+#define GPIO_OSPEEDR_OSPEED11                GPIO_OSPEEDR_OSPEED11_Msk
+#define GPIO_OSPEEDR_OSPEED11_0              (0x1U << GPIO_OSPEEDR_OSPEED11_Pos) /*!< 0x00400000 */
+#define GPIO_OSPEEDR_OSPEED11_1              (0x2U << GPIO_OSPEEDR_OSPEED11_Pos) /*!< 0x00800000 */
 
+#define GPIO_PUPDR_PUPD12_Pos                (24U)
+#define GPIO_PUPDR_PUPD12_Msk                (0x3U << GPIO_PUPDR_PUPD12_Pos)   /*!< 0x03000000 */
+#define GPIO_PUPDR_PUPD12                    GPIO_PUPDR_PUPD12_Msk
+#define GPIO_PUPDR_PUPD12_0                  (0x1U << GPIO_PUPDR_PUPD12_Pos)   /*!< 0x01000000 */
+#define GPIO_PUPDR_PUPD12_1                  (0x2U << GPIO_PUPDR_PUPD12_Pos)   /*!< 0x02000000 */
 #define GPIO_PUPDR_PUPD13_Pos                (26U)
 #define GPIO_PUPDR_PUPD13_Msk                (0x3U << GPIO_PUPDR_PUPD13_Pos)   /*!< 0x0C000000 */
 #define GPIO_PUPDR_PUPD13                    GPIO_PUPDR_PUPD13_Msk
 #define GPIO_PUPDR_PUPD13_0                  (0x1U << GPIO_PUPDR_PUPD13_Pos)   /*!< 0x04000000 */
 #define GPIO_PUPDR_PUPD13_1                  (0x2U << GPIO_PUPDR_PUPD13_Pos)   /*!< 0x08000000 */
+#define GPIO_PUPDR_PUPD14_Pos                (28U)
+#define GPIO_PUPDR_PUPD14_Msk                (0x3U << GPIO_PUPDR_PUPD14_Pos)   /*!< 0x30000000 */
+#define GPIO_PUPDR_PUPD14                    GPIO_PUPDR_PUPD14_Msk
+#define GPIO_PUPDR_PUPD14_0                  (0x1U << GPIO_PUPDR_PUPD14_Pos)   /*!< 0x10000000 */
+#define GPIO_PUPDR_PUPD14_1                  (0x2U << GPIO_PUPDR_PUPD14_Pos)   /*!< 0x20000000 */
+#define GPIO_PUPDR_PUPD15_Pos                (30U)
+#define GPIO_PUPDR_PUPD15_Msk                (0x3U << GPIO_PUPDR_PUPD15_Pos)   /*!< 0xC0000000 */
+#define GPIO_PUPDR_PUPD15                    GPIO_PUPDR_PUPD15_Msk
+#define GPIO_PUPDR_PUPD15_0                  (0x1U << GPIO_PUPDR_PUPD15_Pos)   /*!< 0x40000000 */
+#define GPIO_PUPDR_PUPD15_1                  (0x2U << GPIO_PUPDR_PUPD15_Pos)   /*!< 0x80000000 */
 
 #define GPIO_ODR_OD3_Pos                     (3U)
 #define GPIO_ODR_OD3_Msk                     (0x1U << GPIO_ODR_OD3_Pos)        /*!< 0x00000008 */
@@ -228,6 +339,18 @@ typedef struct
 #define GPIO_ODR_OD5_Pos                     (5U)
 #define GPIO_ODR_OD5_Msk                     (0x1U << GPIO_ODR_OD5_Pos)        /*!< 0x00000020 */
 #define GPIO_ODR_OD5                         GPIO_ODR_OD5_Msk
+#define GPIO_ODR_OD8_Pos                     (8U)
+#define GPIO_ODR_OD8_Msk                     (0x1U << GPIO_ODR_OD8_Pos)        /*!< 0x00000100 */
+#define GPIO_ODR_OD8                         GPIO_ODR_OD8_Msk
+#define GPIO_ODR_OD9_Pos                     (9U)
+#define GPIO_ODR_OD9_Msk                     (0x1U << GPIO_ODR_OD9_Pos)        /*!< 0x00000200 */
+#define GPIO_ODR_OD9                         GPIO_ODR_OD9_Msk
+#define GPIO_ODR_OD10_Pos                    (10U)
+#define GPIO_ODR_OD10_Msk                    (0x1U << GPIO_ODR_OD10_Pos)       /*!< 0x00000400 */
+#define GPIO_ODR_OD10                        GPIO_ODR_OD10_Msk
+#define GPIO_ODR_OD11_Pos                    (11U)
+#define GPIO_ODR_OD11_Msk                    (0x1U << GPIO_ODR_OD11_Pos)       /*!< 0x00000800 */
+#define GPIO_ODR_OD11                        GPIO_ODR_OD11_Msk
 
 #define GPIO_BSRR_BS3_Pos                    (3U)
 #define GPIO_BSRR_BS3_Msk                    (0x1U << GPIO_BSRR_BS3_Pos)       /*!< 0x00000008 */
@@ -238,6 +361,18 @@ typedef struct
 #define GPIO_BSRR_BS5_Pos                    (5U)
 #define GPIO_BSRR_BS5_Msk                    (0x1U << GPIO_BSRR_BS5_Pos)       /*!< 0x00000020 */
 #define GPIO_BSRR_BS5                        GPIO_BSRR_BS5_Msk
+#define GPIO_BSRR_BS8_Pos                    (8U)
+#define GPIO_BSRR_BS8_Msk                    (0x1U << GPIO_BSRR_BS8_Pos)       /*!< 0x00000100 */
+#define GPIO_BSRR_BS8                        GPIO_BSRR_BS8_Msk
+#define GPIO_BSRR_BS9_Pos                    (9U)
+#define GPIO_BSRR_BS9_Msk                    (0x1U << GPIO_BSRR_BS9_Pos)       /*!< 0x00000200 */
+#define GPIO_BSRR_BS9                        GPIO_BSRR_BS9_Msk
+#define GPIO_BSRR_BS10_Pos                   (10U)
+#define GPIO_BSRR_BS10_Msk                   (0x1U << GPIO_BSRR_BS10_Pos)      /*!< 0x00000400 */
+#define GPIO_BSRR_BS10                       GPIO_BSRR_BS10_Msk
+#define GPIO_BSRR_BS11_Pos                   (11U)
+#define GPIO_BSRR_BS11_Msk                   (0x1U << GPIO_BSRR_BS11_Pos)      /*!< 0x00000800 */
+#define GPIO_BSRR_BS11                       GPIO_BSRR_BS11_Msk
 
 #define GPIO_BRR_BR3_Pos                     (3U)
 #define GPIO_BRR_BR3_Msk                     (0x1U << GPIO_BRR_BR3_Pos)        /*!< 0x00000008 */
@@ -248,3 +383,15 @@ typedef struct
 #define GPIO_BRR_BR5_Pos                     (5U)
 #define GPIO_BRR_BR5_Msk                     (0x1U << GPIO_BRR_BR5_Pos)        /*!< 0x00000020 */
 #define GPIO_BRR_BR5                         GPIO_BRR_BR5_Msk
+#define GPIO_BRR_BR8_Pos                     (8U)
+#define GPIO_BRR_BR8_Msk                     (0x1U << GPIO_BRR_BR8_Pos)        /*!< 0x00000100 */
+#define GPIO_BRR_BR8                         GPIO_BRR_BR8_Msk
+#define GPIO_BRR_BR9_Pos                     (9U)
+#define GPIO_BRR_BR9_Msk                     (0x1U << GPIO_BRR_BR9_Pos)        /*!< 0x00000200 */
+#define GPIO_BRR_BR9                         GPIO_BRR_BR9_Msk
+#define GPIO_BRR_BR10_Pos                    (10U)
+#define GPIO_BRR_BR10_Msk                    (0x1U << GPIO_BRR_BR10_Pos)       /*!< 0x00000400 */
+#define GPIO_BRR_BR10                        GPIO_BRR_BR10_Msk
+#define GPIO_BRR_BR11_Pos                    (11U)
+#define GPIO_BRR_BR11_Msk                    (0x1U << GPIO_BRR_BR11_Pos)       /*!< 0x00000800 */
+#define GPIO_BRR_BR11                        GPIO_BRR_BR11_Msk
