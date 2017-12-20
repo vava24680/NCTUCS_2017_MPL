@@ -77,7 +77,7 @@
                                     __CM4_CMSIS_VERSION_SUB           )        /*!< CMSIS HAL version number */
 
 #define __CORTEX_M                (0x04U)                                      /*!< Cortex-M Core */
-
+#define __FPU_PRESENT        1
 
 #if   defined ( __CC_ARM )
   #define __ASM            __asm                                      /*!< asm keyword for ARM Compiler */
