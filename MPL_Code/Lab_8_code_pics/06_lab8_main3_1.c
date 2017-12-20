@@ -96,6 +96,7 @@ int main()
 			else
 			{
 				SysTick->CTRL = SysTick->CTRL | SysTick_CTRL_ENABLE_Msk;
+				SysTick_state = 1;
 			}
 		}
 	}

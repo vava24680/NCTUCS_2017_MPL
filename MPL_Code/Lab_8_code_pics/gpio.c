@@ -23,7 +23,7 @@
  * | OTHER DEALINGS IN THE SOFTWARE.
  * |----------------------------------------------------------------------
  */
-#include "gpio.h"
+#include "../inc/gpio.h"
 
 void TM_GPIO_INT_EnableClock(GPIO_TypeDef* GPIOx);
 void TM_GPIO_INT_Init(GPIO_TypeDef* GPIOx, uint32_t GPIO_Pin, TM_GPIO_Mode_t GPIO_Mode, TM_GPIO_OType_t GPIO_OType, TM_GPIO_PuPd_t GPIO_PuPd, TM_GPIO_Speed_t GPIO_Speed);
@@ -68,7 +68,7 @@ void TM_GPIO_INT_EnableClock(GPIO_TypeDef* GPIOx) {
 }
 
 void TM_GPIO_INT_Init(GPIO_TypeDef* GPIOx, uint32_t GPIO_Pin, TM_GPIO_Mode_t GPIO_Mode, TM_GPIO_OType_t GPIO_OType, TM_GPIO_PuPd_t GPIO_PuPd, TM_GPIO_Speed_t GPIO_Speed) {
-	uint8_t pinpos;
+	//uint8_t pinpos;
 
 	/* Set GPIO PUPD register */
 	GPIOx->PUPDR = (GPIOx->PUPDR & ~(0x03 << (2 * GPIO_Pin))) | ((uint32_t)(GPIO_PuPd << (2 * GPIO_Pin)));
