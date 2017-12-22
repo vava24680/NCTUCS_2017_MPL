@@ -55,10 +55,8 @@
 #define TM_GPIO_SetPinLow(GPIOx, GPIO_Pin)			((GPIOx)->BRR = (1<<(uint32_t)(GPIO_Pin)))
 #define TM_GPIO_SetPinHigh(GPIOx, GPIO_Pin)			((GPIOx)->BSRR = (1<<(uint32_t)(GPIO_Pin)))
 #define TM_GPIO_GetInputPinValue(GPIOx, GPIO_Pin)	(((GPIOx)->IDR & (1<<(uint32_t)(GPIO_Pin))) == 0 ? 0 : 1)
-#define TM_GPIO_SetPinLow_ODR(GPIOx, GPIO_Pin)
-((GPIOx)->ODR = ((GPIOx)->ODR) & (~(1<<(uint32_t)(GPIO_Pin))))
-#define TM_GPIO_SetPinHigh_ODR(GPIOx, GPIO_Pin)
-((GPIOx)->ODR = ((GPIOx)->ODR) | (1<<(uint32_t)(GPIO_Pin)))
+#define TM_GPIO_SetPinLow_ODR(GPIOx, GPIO_Pin) ((GPIOx)->ODR = ((GPIOx)->ODR) & (~(1<<(uint32_t)(GPIO_Pin))))
+#define TM_GPIO_SetPinHigh_ODR(GPIOx, GPIO_Pin) ((GPIOx)->ODR = ((GPIOx)->ODR) | (1<<(uint32_t)(GPIO_Pin)))
 #define TM_GPIO_SetSerialOutput(GPIOx, DATA) ((GPIOx)->ODR = (DATA))
 /*********************GPIO Define*********************/
 
