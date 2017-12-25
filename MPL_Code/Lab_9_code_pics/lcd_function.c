@@ -2,17 +2,17 @@
 
 void lcd_gpio_init(void)
 {
-	TM_GPIO_Init(GPIOB, LCD_RS_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
-	TM_GPIO_Init(GPIOB, LCD_RW_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
-	TM_GPIO_Init(GPIOB, LCD_ENABLE_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
-	TM_GPIO_Init(GPIOB, LCD_DATA0, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
-	TM_GPIO_Init(GPIOB, LCD_DATA1, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
-	TM_GPIO_Init(GPIOB, LCD_DATA2, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
-	TM_GPIO_Init(GPIOB, LCD_DATA3, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
-	TM_GPIO_Init(GPIOB, LCD_DATA4, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
-	TM_GPIO_Init(GPIOB, LCD_DATA5, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
-	TM_GPIO_Init(GPIOB, LCD_DATA6, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
-	TM_GPIO_Init(GPIOB, LCD_DATA7, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
+	TM_GPIO_Init(GPIOB, LCD_RS_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Medium);
+	TM_GPIO_Init(GPIOB, LCD_RW_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Medium);
+	TM_GPIO_Init(GPIOB, LCD_ENABLE_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Medium);
+	TM_GPIO_Init(GPIOB, LCD_DATA0, TM_GPIO_Mode_OUT, TM_GPIO_OType_OD, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	TM_GPIO_Init(GPIOB, LCD_DATA1, TM_GPIO_Mode_OUT, TM_GPIO_OType_OD, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	TM_GPIO_Init(GPIOB, LCD_DATA2, TM_GPIO_Mode_OUT, TM_GPIO_OType_OD, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	TM_GPIO_Init(GPIOB, LCD_DATA3, TM_GPIO_Mode_OUT, TM_GPIO_OType_OD, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	TM_GPIO_Init(GPIOB, LCD_DATA4, TM_GPIO_Mode_OUT, TM_GPIO_OType_OD, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	TM_GPIO_Init(GPIOB, LCD_DATA5, TM_GPIO_Mode_OUT, TM_GPIO_OType_OD, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	TM_GPIO_Init(GPIOB, LCD_DATA6, TM_GPIO_Mode_OUT, TM_GPIO_OType_OD, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	TM_GPIO_Init(GPIOB, LCD_DATA7, TM_GPIO_Mode_OUT, TM_GPIO_OType_OD, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
 	delay_ms(30);
 	return;
 }
@@ -24,7 +24,7 @@ uint8_t BusyCheck(void)
 	TM_GPIO_SetPinLow_ODR(GPIOB, LCD_RS_PIN);
 	TM_GPIO_SetPinHigh_ODR(GPIOB, LCD_RW_PIN);
 	TM_GPIO_SetPinHigh_ODR(GPIOB, LCD_ENABLE_PIN);
-	delay_us(10U);
+	delay_us(10);
 	input_value = TM_GPIO_GetInputPinValue(GPIOB, LCD_DATA7);
 	input_value = TM_GPIO_GetInputPinValue(GPIOB, LCD_DATA7);
 	input_value = TM_GPIO_GetInputPinValue(GPIOB, LCD_DATA7);
@@ -35,75 +35,90 @@ uint8_t BusyCheck(void)
 }
 void LCD_WriteCommand(uint16_t command)
 {
-	while(BusyCheck());
+	//while(BusyCheck());
 	TM_GPIO_SetPinLow(GPIOB, LCD_RS_PIN);
 	TM_GPIO_SetPinLow(GPIOB, LCD_RW_PIN);
 	command &= 0x00FFU;
-	TM_GPIO_SetSerialOutput(GPIOB, command << LCD_DATA0);
+	//LCD_OutPut_DR(GPIOB, command << LCD_DATA0);
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD8_Msk);
+	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA0);
+	command = command >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD9_Msk);
+	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA1);
+	command = command >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD10_Msk);
+	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA2);
+	command = command >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD11_Msk);
+	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA3);
+	command = command >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD12_Msk);
+	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA4);
+	command = command >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD13_Msk);
+	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA5);
+	command = command >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD14_Msk);
+	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA6);
+	command = command >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD15_Msk);
+	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA7);
+	command = command >> 1;
 	TM_GPIO_SetPinHigh_ODR(GPIOB, LCD_ENABLE_PIN);
-	delay_us(20);
+	delay_us(10);
 	TM_GPIO_SetPinLow_ODR(GPIOB, LCD_ENABLE_PIN);
-	delay_us(20);
-}
-void LCD_WriteCommand_4bit(uint16_t command)
-{
-	while(BusyCheck());
-	TM_GPIO_SetPinLow(GPIOB, LCD_RS_PIN);
-	TM_GPIO_SetPinLow(GPIOB, LCD_RW_PIN);
-	TM_GPIO_SetSerialOutput(GPIOB, command << 12U);
-	TM_GPIO_SetPinHigh_ODR(GPIOB, LCD_ENABLE_PIN);
-	delay_us(6);
-	TM_GPIO_SetPinLow_ODR(GPIOB, LCD_ENABLE_PIN);
-	delay_us(6);
+	delay_us(10);
 }
 void LCD_WriteData(uint16_t data)
 {
-	while(BusyCheck());
+	//while(BusyCheck());
 	TM_GPIO_SetPinHigh_ODR(GPIOB, LCD_RS_PIN);
 	TM_GPIO_SetPinLow(GPIOB, LCD_RW_PIN);
 	data &= 0x00FFU;
-	TM_GPIO_SetSerialOutput(GPIOB, data << LCD_DATA0);
+	LCD_OutPut_DR(GPIOB, data << LCD_DATA0);
+	/*GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD8_Msk);
+	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA0);
+	data = data >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD9_Msk);
+	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA1);
+	data = data >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD10_Msk);
+	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA2);
+	data = data >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD11_Msk);
+	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA3);
+	data = data >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD12_Msk);
+	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA4);
+	data = data >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD13_Msk);
+	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA5);
+	data = data >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD14_Msk);
+	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA6);
+	data = data >> 1;
+	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD15_Msk);
+	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA7);
+	data = data >> 1;*/
 	TM_GPIO_SetPinHigh_ODR(GPIOB, LCD_ENABLE_PIN);
-	delay_us(20);
+	delay_us(10);
 	TM_GPIO_SetPinLow_ODR(GPIOB, LCD_ENABLE_PIN);
-	delay_us(5);
-	TM_GPIO_SetPinLow(GPIOB, LCD_RS_PIN);
-	delay_us(20);
-}
-void LCD_WriteData_4bit(uint16_t data)
-{
-	while(BusyCheck());
-	TM_GPIO_SetPinLow(GPIOB, LCD_RS_PIN);
-	TM_GPIO_SetPinLow(GPIOB, LCD_RW_PIN);
-	TM_GPIO_SetSerialOutput(GPIOB, data << 12U);
-	TM_GPIO_SetPinHigh_ODR(GPIOB, LCD_ENABLE_PIN);
-	delay_us(6);
-	TM_GPIO_SetPinLow_ODR(GPIOB, LCD_ENABLE_PIN);
-	delay_us(6);
+	delay_us(10);
 }
 void LCD_ClearScreen(void)
 {
-	//while(BusyCheck());
 	LCD_WriteCommand(0x0001U);
-	//LCD_WriteCommand_4bit(0U);
-	//LCD_WriteCommand_4bit(1U);
 	delay_ms(2);
 }
 void LCD_Cursor_Reset(void)
 {
-	//while(BusyCheck());
 	LCD_WriteCommand(0x0002U);
-	//LCD_WriteCommand_4bit(0U);
-	//LCD_WriteCommand_4bit(2U);
 	delay_ms(2);
 }
 void LCD_Enter_Mode(uint16_t Incre_Decre, uint16_t Shift_screen)
 {
 	uint16_t command = 0x0004U | (Incre_Decre << 1U) | Shift_screen;
-	//while(BusyCheck());
 	LCD_WriteCommand(command);
-	//LCD_WriteCommand_4bit(command >> 4U);
-	//LCD_WriteCommand_4bit(command);
 }
 void LCD_Panel_Switcher(uint16_t screen_switch, uint16_t cursor_show, uint16_t cursor_blink)
 {
@@ -130,10 +145,11 @@ void LCD_Set_DDRAM_Address(uint16_t six_bit_address)
 	uint16_t command = 0x0080U | six_bit_address;
 	LCD_WriteCommand(command);
 }
-void LCD_Function_Set_4bit(uint16_t DL, uint16_t N, uint16_t F)
+void LCD_Serial_Output(const char* data)
 {
-	uint16_t command = 0x0020U | (DL << 4U) | (N << 3U) | (F << 2U);
-	LCD_WriteCommand_4bit(command >> 8U);
-	LCD_WriteCommand_4bit(command);
-	delay_us(50);//Doesn't know why
+	while((*data) != '\0')
+	{
+		LCD_WriteData((uint16_t)(*data));
+		data++;
+	}
 }
