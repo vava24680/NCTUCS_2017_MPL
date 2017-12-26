@@ -8,6 +8,7 @@
 #define INCLUDE_DELAY_H_
 #include "./delay.h"
 #endif
+extern uint32_t ADC_result;
 /*
 ---------------------------------------------
 |	UART GPIO Pin Explanation				|
@@ -27,6 +28,11 @@ typedef enum ADC_clock_control
 	ADC_CLOCK_DISABLE = 0U,
 	ADC_CLOCK_ENABLE = 1U
 } EN_ADC_CLOCK_CONTROL;
+typedef enum ADC_eoc_interrupt_control
+{
+	ADC_EOC_INTERRUPT_DISABLE = 0U,
+	ADC_EOC_INTERRUPT_ENABLE = 1U
+} EN_ADC_EOC_INTERRUPT_CONTROL;
 typedef enum ADC_CR
 {
 	ADC_DEEPPWD_DISABLE = 0U,
@@ -35,9 +41,8 @@ typedef enum ADC_CR
 	ADC_ADVRED_ENABLE = 1U,
 	ADC_ADSTART_DISABLE = 0U,
 	ADC_ADSTART_ENABLE = 1U,
-	ADC_ADEN_DISABLE = 0U,
+	ADC_ADDIS_ENABLE = 1U,
 	ADC_ADEN_ENABLE = 1U
-
 } EN_ADC_CR;
 typedef enum ADC_input_mode
 {
@@ -49,6 +54,11 @@ typedef enum ADC_Conversion_List
 	ADC_Conversion_SingleMode = 0U,
 	ADC_Conversion_ContinuousMode = 1U
 } EN_ADC_CONVERSION_MODE;
+typedef enum ADC_data_align
+{
+	ADC_Data_Right_Align = 0U,
+	ADC_Data_Left_Align = 1U
+} EN_ADC_DATA_ALIGN;
 typedef enum ADC_Resoultion_List
 {
 	ADC_Resolution_12Bit = 0U,
@@ -80,10 +90,14 @@ void ADC_Clock_Control(EN_ADC_CLOCK_CONTROL ADC_clock_option);
 void ADC_Clock_Setting(void);
 void ADC_Init(ADC_TypeDef* ADCx);
 uint32_t ADC_Calibration(ADC_TypeDef* ADCx, EN_ADC_INPUT_MODE ADC_Input_Mode);
+void ADC_EOC_Interrupt_Control(ADC_TypeDef* ADCx, EN_ADC_EOC_INTERRUPT_CONTROL ADC_EOC_Interrupt_Option);
 void ADC_ConvertionMode_Setting(ADC_TypeDef* ADCx, EN_ADC_CONVERSION_MODE ADC_ConversionMode);
+void ADC_Data_Align_Setting(ADC_TypeDef* ADCx, EN_ADC_DATA_ALIGN ADC_Data_Align);
 void ADC_Resolution_Setting(ADC_TypeDef* ADCx, EN_ADC_RESOLUTION ADC_Resolution);
 void ADC_Regular_SequenceLength_Setting(ADC_TypeDef* ADCx, EN_ADC_Regular_Sequence_Length ADC_Regular_SequenceLength,const uint8_t Channel_list[]);
 void ADC_SampleTime_Setting(ADC_TypeDef* ADCx,EN_ADC_SampleTime ADC_SampleTime, uint8_t Channel);
 void ADC_Enable(ADC_TypeDef* ADCx);
+void ADC_Disable(ADC_TypeDef* ADCx);
 void ADC_Start_Conversion(ADC_TypeDef* ADCx);
+//void ADC1_2_IRQHandler(void);
 #endif

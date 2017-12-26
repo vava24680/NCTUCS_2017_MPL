@@ -37,27 +37,21 @@
 
 #ifndef GPIO_H_
 #define GPIO_H_
-#define LCD_GPIO GPIOB
-#define LCD_RS_PIN 3
-#define LCD_RW_PIN 4
-#define LCD_ENABLE_PIN 6
-#define LCD_DATA0 8
-#define LCD_DATA1 9
-#define LCD_DATA2 10
-#define LCD_DATA3 11
-#define LCD_DATA4 12
-#define LCD_DATA5 13
-#define LCD_DATA6 14
-#define LCD_DATA7 15
+#ifndef INCLUDE_STM32L476XX_H_
+#define INCLUDE_STM32L476XX_H_
 #include "./stm32l476xx.h"
+#endif
+#ifndef INCLUDE_SYSTEM_STM32L4XX_H_
+#define INCLUDE_SYSTEM_STM32L4XX_H_
 #include "./system_stm32l4xx.h"
+#endif
 
 #define TM_GPIO_SetPinLow(GPIOx, GPIO_Pin)			((GPIOx)->BRR = (1<<(uint32_t)(GPIO_Pin)))
 #define TM_GPIO_SetPinHigh(GPIOx, GPIO_Pin)			((GPIOx)->BSRR = (1<<(uint32_t)(GPIO_Pin)))
 #define TM_GPIO_GetInputPinValue(GPIOx, GPIO_Pin)	(((GPIOx)->IDR & (1<<(uint32_t)(GPIO_Pin))) == 0 ? 0 : 1)
 #define TM_GPIO_SetPinLow_ODR(GPIOx, GPIO_Pin) ((GPIOx)->ODR = ((GPIOx)->ODR) & (~(1<<(uint32_t)(GPIO_Pin))))
 #define TM_GPIO_SetPinHigh_ODR(GPIOx, GPIO_Pin) ((GPIOx)->ODR = ((GPIOx)->ODR) | (1<<(uint32_t)(GPIO_Pin)))
-#define TM_GPIO_SetSerialOutput(GPIOx, DATA) ((GPIOx)->ODR = (DATA))
+#define TM_GPIO_SetSerialOutput(GPIOx, DATA) ((GPIOx)->ODR = ((GPIOx)->ODR & (0xFFFF00FFU)) | )
 /*********************GPIO Define*********************/
 
 

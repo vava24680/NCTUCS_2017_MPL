@@ -1,9 +1,11 @@
-#include "./inc/delay.h"
-
+#ifndef INCLUDE_DELAY_H_
+#define INCLUDE_DELAY_H_
+#include "../inc/delay.h"
+#endif
 /*
 * Here our system clokc is assumed as 4Mhz
 */
-void Timer2_Init(void)
+void us_timer_init(void)
 {
 	RCC->APB1ENR1 = RCC->APB1ENR1 & (~RCC_APB1ENR1_TIM2EN_Msk);
 	RCC->APB1ENR1 = RCC->APB1ENR1 | RCC_APB1ENR1_TIM2EN;
@@ -14,16 +16,20 @@ void Timer2_Init(void)
 	TIM2->ARR = TIM2->ARR | (US_FREQUENCY - 1);
 	TIM2->EGR = TIM2->EGR & (~TIM_EGR_UG_Msk);
 	TIM2->EGR = TIM2->EGR | (1U << TIM_EGR_UG_Pos);
+	TIM2->CNT = TIM2->CNT & (~TIM_CNT_CNT_Msk);
 }
 void delay_ms(uint32_t value)
 {
-	Timer2_Init();
-	
+	delay_us(value * 1000);
 	return;
 }
 
 void delay_us(uint32_t value)
 {
-
-
+	us_timer_init();
+	TIM2->CR1 = TIM2->CR1 & (~TIM_CR1_CEN_Msk);
+	TIM2->CR1 = TIM2->CR1 | TIM_CR1_CEN;
+	while(TIM2->CNT < value);
+	TIM2->CR1 = TIM2->CR1 & (~TIM_CR1_CEN_Msk);
+	return;
 }

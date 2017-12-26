@@ -1,8 +1,15 @@
-#ifndef INCLUDE_ADH_H_
-#define INCLUDE_ADH_H_
+#ifndef INCLUDE_ADC_H_
+#define INCLUDE_ADC_H_
 #include "../inc/ADC.h"
 #endif
-
+/*
+---------------------------------------------
+|	UART GPIO Pin Explanation				|
+---------------------------------------------
+|	GPIO Module	|	Pin	|	Function		|
+|	GPIOB		|	1	|	ADC_Analog_In	|
+---------------------------------------------
+*/
 void ADC_GPIO_Init(GPIO_TypeDef* GPIOx)
 {
 	TM_GPIO_Init(GPIOx, ADC_Analog_In, TM_GPIO_Mode_AN, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Low);
@@ -18,19 +25,20 @@ void ADC_Clock_Control(EN_ADC_CLOCK_CONTROL ADC_CLOCK_CONTROL)
 {
 	RCC->AHB2ENR = RCC->AHB2ENR & (~RCC_AHB2ENR_ADCEN_Msk);
 	RCC->AHB2ENR |= (ADC_CLOCK_CONTROL << RCC_AHB2ENR_ADCEN_Pos);
-}
-void ADC_Clock_Setting(void)
-{
-
-	return;
+	ADC123_COMMON->CCR |= ADC_CCR_CKMODE_0;
 }
 void ADC_Init(ADC_TypeDef* ADCx)
 {
-	ADC1->CR &= (~ADC_CR_DEEPPWD_Msk);//Exit Deep-Power-Mode
-	ADC1->CR |= (ADC_DEEPPWD_DISABLE << ADC_CR_DEEPPWD_Pos);
-	ADC1->CR &= (~ADC_CR_ADVREGEN_Msk);
-	ADC1->CR |= (ADC_ADVRED_ENABLE << ADC_CR_ADVREGEN_Pos);
-	delay_us(400);
+	ADCx->CR &= (~ADC_CR_DEEPPWD_Msk);//Exit Deep-Power-Mode
+	ADCx->CR |= (ADC_DEEPPWD_DISABLE << ADC_CR_DEEPPWD_Pos);
+	ADCx->CR &= (~ADC_CR_ADVREGEN_Msk);
+	ADCx->CR |= (ADC_ADVRED_ENABLE << ADC_CR_ADVREGEN_Pos);
+	delay_us(1000);
+}
+void ADC_EOC_Interrupt_Control(ADC_TypeDef* ADCx, EN_ADC_EOC_INTERRUPT_CONTROL ADC_EOC_Interrupt_Option)
+{
+	ADCx->IER &= (~ADC_IER_EOCIE_Msk);
+	ADCx->IER |= (ADC_EOC_Interrupt_Option << ADC_IER_EOCIE_Pos);
 }
 uint32_t ADC_Calibration(ADC_TypeDef* ADCx, EN_ADC_INPUT_MODE ADC_Input_Mode)
 {
@@ -46,6 +54,11 @@ void ADC_ConvertionMode_Setting(ADC_TypeDef* ADCx, EN_ADC_CONVERSION_MODE ADC_Co
 {
 	ADCx->CFGR &= (~ADC_CFGR_CONT_Msk);
 	ADCx->CFGR |= (ADC_ConversionMode << ADC_CFGR_CONT_Pos);
+}
+void ADC_Data_Align_Setting(ADC_TypeDef* ADCx, EN_ADC_DATA_ALIGN ADC_Data_Align)
+{
+	ADCx->CFGR &= (~ADC_CFGR_ALIGN_Msk);
+	ADCx->CFGR |= (ADC_Data_Align << ADC_CFGR_ALIGN_Pos);
 }
 void ADC_Resolution_Setting(ADC_TypeDef* ADCx, EN_ADC_RESOLUTION ADC_Resolution)
 {
@@ -100,13 +113,19 @@ void ADC_SampleTime_Setting(ADC_TypeDef* ADCx,EN_ADC_SampleTime ADC_SampleTime, 
 }
 void ADC_Enable(ADC_TypeDef* ADCx)
 {
-	ADC1->CR &= (~ADC_CR_ADEN_Msk);
-	ADC1->CR |= (ADC_ADEN_ENABLE << ADC_CR_ADEN_Pos);
+	ADCx->ISR |= 1U;
+	ADCx->CR &= (~ADC_CR_ADEN_Msk);
+	ADCx->CR |= (ADC_ADEN_ENABLE << ADC_CR_ADEN_Pos);
+	while( !( (ADCx->ISR >> ADC_ISR_ADRDY_Pos) & 1U ) );
+	while( ( (ADCx->CR >> ADC_CR_ADSTART_Pos) & 1U ) );
+}
+void ADC_Disable(ADC_TypeDef* ADCx)
+{
+	ADCx->CR &= (~ADC_CR_ADDIS_Msk);
+	ADCx->CR |= (ADC_ADDIS_ENABLE << ADC_CR_ADDIS_Pos);
+	while( (ADCx->CR >> ADC_CR_ADDIS_Pos) & 1U );
 }
 void ADC_Start_Conversion(ADC_TypeDef* ADCx)
 {
-	//ADC Enable Check
-	while( !( (ADC1->ISR >> ADC_ISR_ADRDY_Pos) & 1U ) );
-	while( ( (ADC1->CR >> ADC_CR_ADSTART_Pos) & 1U ) );
-	ADC1->CR |= (ADC_ADSTART_ENABLE << ADC_CR_ADSTART_Pos);
+	ADCx->CR |= (ADC_ADSTART_ENABLE << ADC_CR_ADSTART_Pos);
 }
