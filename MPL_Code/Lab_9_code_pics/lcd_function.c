@@ -1,5 +1,7 @@
+#ifndef INCLUDE_LCD_FUNCTION_H_
+#define INCLUDE_LCD_FUNCTION_H_
 #include "../inc/lcd_function.h"
-
+#endif
 void lcd_gpio_init(void)
 {
 	TM_GPIO_Init(GPIOB, LCD_RS_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Medium);
@@ -39,31 +41,7 @@ void LCD_WriteCommand(uint16_t command)
 	TM_GPIO_SetPinLow(GPIOB, LCD_RS_PIN);
 	TM_GPIO_SetPinLow(GPIOB, LCD_RW_PIN);
 	command &= 0x00FFU;
-	//LCD_OutPut_DR(GPIOB, command << LCD_DATA0);
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD8_Msk);
-	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA0);
-	command = command >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD9_Msk);
-	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA1);
-	command = command >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD10_Msk);
-	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA2);
-	command = command >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD11_Msk);
-	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA3);
-	command = command >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD12_Msk);
-	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA4);
-	command = command >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD13_Msk);
-	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA5);
-	command = command >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD14_Msk);
-	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA6);
-	command = command >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD15_Msk);
-	GPIOB->ODR = GPIOB->ODR |((command & 1U) << LCD_DATA7);
-	command = command >> 1;
+	LCD_OutPut_DR(GPIOB, command << LCD_DATA0);
 	TM_GPIO_SetPinHigh_ODR(GPIOB, LCD_ENABLE_PIN);
 	delay_us(10);
 	TM_GPIO_SetPinLow_ODR(GPIOB, LCD_ENABLE_PIN);
@@ -76,30 +54,6 @@ void LCD_WriteData(uint16_t data)
 	TM_GPIO_SetPinLow(GPIOB, LCD_RW_PIN);
 	data &= 0x00FFU;
 	LCD_OutPut_DR(GPIOB, data << LCD_DATA0);
-	/*GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD8_Msk);
-	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA0);
-	data = data >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD9_Msk);
-	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA1);
-	data = data >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD10_Msk);
-	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA2);
-	data = data >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD11_Msk);
-	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA3);
-	data = data >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD12_Msk);
-	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA4);
-	data = data >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD13_Msk);
-	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA5);
-	data = data >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD14_Msk);
-	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA6);
-	data = data >> 1;
-	GPIOB->ODR = GPIOB->ODR &(~GPIO_ODR_OD15_Msk);
-	GPIOB->ODR = GPIOB->ODR |((data & 1U) << LCD_DATA7);
-	data = data >> 1;*/
 	TM_GPIO_SetPinHigh_ODR(GPIOB, LCD_ENABLE_PIN);
 	delay_us(10);
 	TM_GPIO_SetPinLow_ODR(GPIOB, LCD_ENABLE_PIN);
