@@ -23,10 +23,7 @@
  * | OTHER DEALINGS IN THE SOFTWARE.
  * |----------------------------------------------------------------------
  */
-#ifndef INCLUDE_GPIO_H_
-#define INCLUDE_GPIO_H_
 #include "../inc/gpio.h"
-#endif
 
 void TM_GPIO_INT_EnableClock(GPIO_TypeDef* GPIOx);
 void TM_GPIO_INT_Init(GPIO_TypeDef* GPIOx, uint32_t GPIO_Pin, TM_GPIO_Mode_t GPIO_Mode, TM_GPIO_OType_t GPIO_OType, TM_GPIO_PuPd_t GPIO_PuPd, TM_GPIO_Speed_t GPIO_Speed);

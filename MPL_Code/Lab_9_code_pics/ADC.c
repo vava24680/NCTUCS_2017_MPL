@@ -1,7 +1,4 @@
-#ifndef INCLUDE_ADC_H_
-#define INCLUDE_ADC_H_
 #include "../inc/ADC.h"
-#endif
 /*
 ---------------------------------------------
 |	UART GPIO Pin Explanation				|

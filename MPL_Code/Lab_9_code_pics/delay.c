@@ -1,7 +1,4 @@
-#ifndef INCLUDE_DELAY_H_
-#define INCLUDE_DELAY_H_
 #include "../inc/delay.h"
-#endif
 /*
 * Here our system clokc is assumed as 4Mhz
 */

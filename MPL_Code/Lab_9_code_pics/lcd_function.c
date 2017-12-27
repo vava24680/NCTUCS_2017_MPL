@@ -1,7 +1,4 @@
-#ifndef INCLUDE_LCD_FUNCTION_H_
-#define INCLUDE_LCD_FUNCTION_H_
 #include "../inc/lcd_function.h"
-#endif
 void lcd_gpio_init(void)
 {
 	TM_GPIO_Init(GPIOB, LCD_RS_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Medium);

@@ -1,25 +1,10 @@
 #ifndef LAB9_MAIN_3_1_
 #define LAB9_MAIN_3_1_
-#ifndef INCLUDE_GPIO_H_
-#define INCLUDE_GPIO_H_
 #include "../inc/gpio.h"
-#endif
-#ifndef INCLUDE_LCD_FUNCTION_H_
-#define INCLUDE_LCD_FUNCTION_H_
 #include "../inc/lcd_function.h"
-#endif
-#ifndef INCLUDE_DELAY_H_
-#define INCLUDE_DELAY_H_
 #include "../inc/delay.h"
-#endif
-#ifndef INCLUDE_ADC_H_
-#define INCLUDE_ADC_H_
 #include "../inc/ADC.h"
-#endif
-#ifndef INCLUDE_UART_H_
-#define INCLUDE_UART_H_
 #include "../inc/UART.h"
-#endif
 #define USART_InUse USART3
 char buffer[32];
 void Essential_GPIO_init(void)

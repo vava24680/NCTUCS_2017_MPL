@@ -1,25 +1,10 @@
 #ifndef LAB9_MAIN_3_2_
 #define LAB9_MAIN_3_2_
-#ifndef INCLUDE_UART_H_
-#define INCLUDE_UART_H_
 #include "../inc/UART.h"
-#endif
-#ifndef INCLUDE_ADC_H_
-#define INCLUDE_ADC_H_
 #include "../inc/ADC.h"
-#endif
-#ifndef INCLUDE_GPIO_H_
-#define INCLUDE_GPIO_H_
 #include "../inc/gpio.h"
-#endif
-#ifndef INCLUDE_BUTTON_H_
-#define INCLUDE_BUTTON_H_
 #include "../inc/button.h"
-#endif
-#ifndef INCLUDE_STDIO_H_
-#define INCLUDE_STDIO_H_
 #include "stdio.h"
-#endif
 #define ADC_InUse ADC1
 extern void STACK_INIT(void);
 extern int user_press_button(void);

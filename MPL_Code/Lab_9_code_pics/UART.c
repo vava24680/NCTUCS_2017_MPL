@@ -1,8 +1,4 @@
-
-#ifndef INCLUDE_UART_H_
-#define INCLUDE_UART_H_
 #include "../inc/UART.h"
-#endif
 /*
 ----------------------------------------
 |	UART GPIO Pin Explanation			|
@@ -121,7 +117,6 @@ void USART_Transmit(USART_TypeDef* USARTx, const char* data)
 	while( !( (USARTx->ISR >> USART_ISR_TC_Pos) & 1U) ) ;
 	USART_Tx_Control(USARTx, USART_TX_CONTROL_DISABLE);
 }
-#ifdef LAB9_MAIN_3_1_
 void USART3_IRQHandler(void)
 {
 	uint8_t ORE, NE, FE;
@@ -147,4 +142,3 @@ void USART3_IRQHandler(void)
 	}
 	return;
 }
-#endif
