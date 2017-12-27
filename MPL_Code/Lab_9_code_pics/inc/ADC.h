@@ -1,13 +1,7 @@
 #ifndef ADC_H_
 #define ADC_H_
-#ifndef INCLUDE_GPIO_H_
-#define INCLUDE_GPIO_H_
 #include "./gpio.h"
-#endif
-#ifndef INCLUDE_DELAY_H_
-#define INCLUDE_DELAY_H_
 #include "./delay.h"
-#endif
 extern uint32_t ADC_result;
 /*
 ---------------------------------------------

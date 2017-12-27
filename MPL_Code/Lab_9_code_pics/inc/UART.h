@@ -1,15 +1,8 @@
 #ifndef UART_H_
 #define UART_H_
-
-#ifndef INCLUDE_STDINT_H_
-#define INCLUDE_STDINT_H_
 #include <stdint.h>
-#endif
-#ifndef INCLUDE_LCD_FUNCTION_H_
-#define INCLUDE_LCD_FUNCTION_H_
-#include "lcd_function.h"
-#endif
 #include <string.h>
+#include "lcd_function.h"
 #include "gpio.h"
 #define USART_InUse USART3
 extern char buffer[];
@@ -110,7 +103,5 @@ void USART_Hardware_Flow_Control(USART_TypeDef* USARTx, EN_USART_CTS_CONTROL USA
 void USART_Asy_Mode_Setting(USART_TypeDef* USARTx);
 void USART_Transmit(USART_TypeDef* USARTx, const char* data);
 void USART_Receive(USART_TypeDef* USARTx);
-#ifdef LAB9_MAIN_3_1_
 void USART3_IRQHandler(void);
-#endif
 #endif

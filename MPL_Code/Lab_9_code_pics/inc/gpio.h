@@ -37,14 +37,8 @@
 
 #ifndef GPIO_H_
 #define GPIO_H_
-#ifndef INCLUDE_STM32L476XX_H_
-#define INCLUDE_STM32L476XX_H_
 #include "./stm32l476xx.h"
-#endif
-#ifndef INCLUDE_SYSTEM_STM32L4XX_H_
-#define INCLUDE_SYSTEM_STM32L4XX_H_
 #include "./system_stm32l4xx.h"
-#endif
 
 #define TM_GPIO_SetPinLow(GPIOx, GPIO_Pin)			((GPIOx)->BRR = (1<<(uint32_t)(GPIO_Pin)))
 #define TM_GPIO_SetPinHigh(GPIOx, GPIO_Pin)			((GPIOx)->BSRR = (1<<(uint32_t)(GPIO_Pin)))

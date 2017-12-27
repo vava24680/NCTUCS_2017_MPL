@@ -1,16 +1,8 @@
 #ifndef LCD_FUNCTION_H_
 #define LCD_FUNCTION_H_
-#ifndef STDINT_H_
-#define STDINT_H_
 #include <stdint.h>
-#endif
-#ifndef GPIO_H_
 #include "gpio.h"
-#endif
-#ifndef DELAY_H_
-#define DELAY_H_
 #include "delay.h"
-#endif
 #define LCD_GPIO GPIOB
 #define LCD_RS_PIN 3
 #define LCD_RW_PIN 4
