@@ -1,49 +1,66 @@
+#ifndef LAB9_MAIN_3_1_
+#define LAB9_MAIN_3_1_
+#ifndef INCLUDE_GPIO_H_
+#define INCLUDE_GPIO_H_
 #include "../inc/gpio.h"
-#include "../inc/ref.h"
+#endif
+#ifndef INCLUDE_LCD_FUNCTION_H_
+#define INCLUDE_LCD_FUNCTION_H_
 #include "../inc/lcd_function.h"
-
+#endif
+#ifndef INCLUDE_DELAY_H_
+#define INCLUDE_DELAY_H_
+#include "../inc/delay.h"
+#endif
+#ifndef INCLUDE_ADC_H_
+#define INCLUDE_ADC_H_
+#include "../inc/ADC.h"
+#endif
+#ifndef INCLUDE_UART_H_
+#define INCLUDE_UART_H_
+#include "../inc/UART.h"
+#endif
+#define USART_InUse USART3
+char buffer[32];
 void Essential_GPIO_init(void)
 {
-	RCC->AHB2ENR = RCC->AHB2ENR & (~RCC_AHB2ENR_GPIOBEN_Msk);
-	RCC->AHB2ENR = RCC->AHB2ENR | RCC_AHB2ENR_GPIOBEN;
+	RCC->AHB2ENR = RCC->AHB2ENR & (~RCC_AHB2ENR_GPIOBEN_Msk) & (~RCC_AHB2ENR_GPIOCEN_Msk);
+	RCC->AHB2ENR = RCC->AHB2ENR | RCC_AHB2ENR_GPIOBEN | RCC_AHB2ENR_GPIOCEN;
 	return;
 }
-void SystemClock_Config(void)
+void usart_init(void)
 {
-	uint32_t PLLN = 40U;
-	uint32_t PLLM = 0U;
-	uint32_t PLLR = 0U;
-	/**/
-	while(!((RCC->CR >> 1U) & 0x01U));
-	RCC->CFGR = RCC->CFGR & (~RCC_CFGR_SW_Msk);
-	RCC->CFGR = RCC->CFGR | (0U << RCC_CFGR_SW_Pos);
-
-	RCC->CR = RCC->CR & (~RCC_CR_PLLON_Msk);//Turn of PLL clock
-	while((RCC->CR >> 25U) & 1U);
-
-	RCC->PLLCFGR = RCC->PLLCFGR & (~RCC_PLLCFGR_PLLSRC_MSI_Msk) & (~RCC_PLLCFGR_PLLN_Msk) & (~RCC_PLLCFGR_PLLM_Msk) & (~RCC_PLLCFGR_PLLR_Msk);
-	RCC->PLLCFGR = RCC->PLLCFGR | (1 << RCC_PLLCFGR_PLLSRC_MSI_Pos) | (PLLN << RCC_PLLCFGR_PLLN_Pos) | (PLLM << RCC_PLLCFGR_PLLM_Pos) | (PLLR << RCC_PLLCFGR_PLLR_Pos);
-	RCC->CR = RCC->CR & (~RCC_CR_PLLON_Msk);
-	RCC->CR = RCC->CR | (1 << RCC_CR_PLLON_Pos);
-
-	RCC->PLLCFGR = RCC->PLLCFGR & (~RCC_PLLCFGR_PLLREN_Msk) & (~RCC_PLLCFGR_PLLPEN_Msk) & (~RCC_PLLCFGR_PLLQEN_Msk);
-	RCC->PLLCFGR = RCC->PLLCFGR | (1 << RCC_PLLCFGR_PLLREN_Pos) | (1 << RCC_PLLCFGR_PLLPEN_Pos) | (1 << RCC_PLLCFGR_PLLQEN_Pos);
-
-	while(!((RCC->CR >> 25U) & 1U))
-	RCC->CFGR = RCC->CFGR & (~RCC_CFGR_SW_Msk);
-	RCC->CFGR = RCC->CFGR | (0x03 << RCC_CFGR_SW_Pos);
+	USART_Module_Init();
+	USART_GPIO_Init();
+	USART_Init(USART_InUse, USART_DATAWORD_8_BITS, USART_EVEN_PARITY, USART_PARITY_CONTROL_DISABLE, USART_OVERSAMPLING_16);
+	USART_Stop_Bits_Selection(USART_InUse, USART_STOP_1_BIT);
+	USART_Baud_Rate_Setting(USART_InUse, 9600U, USART_OVERSAMPLING_16);
+	USART_Sample_Bits_Selection(USART_InUse, USART_THREE_SAMPLE_BIT);
+	//USART_Tx_Interrupt_Control(USART_InUse, USART_TX_INTERRUPT_ENABLE);
+	USART_Rx_Interrupt_Control(USART_InUse, USART_RX_INTERRUPT_ENABLE);
+	USART_Hardware_Flow_Control(USART_InUse, USART_CTS_DISABLE, USART_RTS_DISABLE);
+	USART_Asy_Mode_Setting(USART_InUse);
+	USART_Rx_Control(USART_InUse, USART_RX_CONTROL_ENABLE);
+}
+void NVIC_USART3_ENABLE(void)
+{
+	NVIC_EnableIRQ(USART3_IRQn);
+	NVIC_SetPriority(USART3_IRQn, 46);
+	return;
 }
 int main(void)
 {
 	Essential_GPIO_init();
-	//SystemClock_Config();
 	lcd_gpio_init();
-	LCD_Function_Set(0x0001U, 0x0001U, 0x0000U);
-	//LCD_Function_Set_4bit(0x0000U, 0x0001U, 0x0000U);
-	LCD_Enter_Mode(0x0001U, 0x0000U);
-	LCD_Panel_Switcher(0x0001U, 0x0000U, 0x0000U);
+	NVIC_USART3_ENABLE();
+	usart_init();
+	LCD_Function_Set(1U, 1U, 0U);
+	LCD_Enter_Mode(1U, 0U);
+	LCD_Panel_Switcher(1U, 0U, 0U);
 	LCD_ClearScreen();
-	LCD_Set_DDRAM_Address(0x0000U);
-	LCD_WriteData((uint16_t)'A');
+	LCD_Cursor_Reset();
+	LCD_Set_DDRAM_Address(0U);
+	while(1);
 	return 0;
 }
+#endif
