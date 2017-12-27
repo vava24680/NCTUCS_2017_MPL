@@ -25,7 +25,17 @@ void ADC_Clock_Control(EN_ADC_CLOCK_CONTROL ADC_CLOCK_CONTROL)
 {
 	RCC->AHB2ENR = RCC->AHB2ENR & (~RCC_AHB2ENR_ADCEN_Msk);
 	RCC->AHB2ENR |= (ADC_CLOCK_CONTROL << RCC_AHB2ENR_ADCEN_Pos);
-	ADC123_COMMON->CCR |= ADC_CCR_CKMODE_0;
+	//ADC123_COMMON->CCR |= ADC_CCR_CKMODE_0;
+}
+void ADC_Peripheral_Clock_Setting(EN_ADC_PERIPHERAL_CLOCK ADC_Peripheral_Clock)
+{
+	RCC->CCIPR &= RCC_CCIPR_ADCSEL_Msk;
+	RCC->CCIPR |= (ADC_Peripheral_Clock << RCC_CCIPR_ADCSEL_Pos);
+}
+void ADC_BuiltIn_Common_Clock_Setting(ADC_TypeDef* ADCx, ADC_BUILT_IN_COMMON_CLOCK ADC_BuiltIn_Common_Clock)
+{
+	ADC123_COMMON->CCR &= ADC_CCR_CKMODE_Msk;
+	ADC123_COMMON->CCR |= (ADC_BuiltIn_Common_Clock << ADC_CCR_CKMODE_Pos);
 }
 void ADC_Init(ADC_TypeDef* ADCx)
 {

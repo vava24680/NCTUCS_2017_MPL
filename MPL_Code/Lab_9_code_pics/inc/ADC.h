@@ -28,6 +28,20 @@ typedef enum ADC_clock_control
 	ADC_CLOCK_DISABLE = 0U,
 	ADC_CLOCK_ENABLE = 1U
 } EN_ADC_CLOCK_CONTROL;
+typedef enum ADC_peripheral_clock_select
+{
+	ADC_PERIPHERAL_CLOCK_NO_CLOCK = 0U,
+	ADC_PERIPHERAL_CLOCK_PLLSAI1R_CLOCK = 1U,
+	ADC_PERIPHERAL_CLOCK_PLLSAI2R_CLOCK = 2U,
+	ADC_PERIPHERAL_CLOCK_SYSCLK = 3U
+} EN_ADC_PERIPHERAL_CLOCK;
+typedef enum ADC_built_in_common_clock_select
+{
+	ADC_BUILT_IN_COMMON_CLOCK_PERIPHERAL_CLOCK = 0U,
+	ADC_BUILT_IN_COMMON_CLOCK_HCLK_DIVED_1 = 1U,
+	ADC_BUILT_IN_COMMON_CLOCK_HCLK_DIVED_2 = 2U,
+	ADC_BUILT_IN_COMMON_CLOCK_HCLK_DIVED_4 = 3U
+} ADC_BUILT_IN_COMMON_CLOCK;
 typedef enum ADC_eoc_interrupt_control
 {
 	ADC_EOC_INTERRUPT_DISABLE = 0U,
@@ -87,7 +101,8 @@ typedef enum ADC_SampleTime_List
 void ADC_GPIO_Init(GPIO_TypeDef* GPIOx);
 void ADC_GPIO_ASCR_Control(GPIO_TypeDef* GPIOx, uint32_t Pin, EN_GPIO_ASCR GPIO_ASCR);
 void ADC_Clock_Control(EN_ADC_CLOCK_CONTROL ADC_clock_option);
-void ADC_Clock_Setting(void);
+void ADC_Peripheral_Clock_Setting(EN_ADC_PERIPHERAL_CLOCK ADC_Peripheral_Clock);
+void ADC_BuiltIn_Common_Clock_Setting(ADC_TypeDef* ADCx, ADC_BUILT_IN_COMMON_CLOCK ADC_BuiltIn_Common_Clock);
 void ADC_Init(ADC_TypeDef* ADCx);
 uint32_t ADC_Calibration(ADC_TypeDef* ADCx, EN_ADC_INPUT_MODE ADC_Input_Mode);
 void ADC_EOC_Interrupt_Control(ADC_TypeDef* ADCx, EN_ADC_EOC_INTERRUPT_CONTROL ADC_EOC_Interrupt_Option);
