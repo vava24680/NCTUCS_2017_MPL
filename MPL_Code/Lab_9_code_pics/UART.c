@@ -1,4 +1,8 @@
-#include "../inc/uart.h"
+
+#ifndef INCLUDE_UART_H_
+#define INCLUDE_UART_H_
+#include "../inc/UART.h"
+#endif
 /*
 ----------------------------------------
 |	UART GPIO Pin Explanation			|
@@ -38,15 +42,20 @@ void USART_Init(USART_TypeDef* USARTx, EN_USART_DATAWORD_LENGTH USART_Dataword_l
 	USART_Control(USARTx, USART_ENABLE);
 	USART_Rx_Control(USARTx, USART_RX_CONTROL_ENABLE);
 }
+void USART_Tx_Interrupt_Control(USART_TypeDef* USARTx, EN_USART_TX_INTERRUPT_CONTROL USART_Tx_interrupt_control)
+{
+	USARTx->CR1 &= (~USART_CR1_TCIE_Msk);
+	USARTx->CR1 |= (USART_Tx_interrupt_control << USART_CR1_TCIE_Pos);
+}
 void USART_Rx_Interrupt_Control(USART_TypeDef* USARTx, EN_USART_RX_INTERRUPT_CONTROL USART_Rx_interrupt_control)
 {
-	USARTx->CR1 = USARTx->CR1 & (~USART_CR1_RXNEIE_Msk);
-	USARTx->CR1 = USARTx->CR1 | (USART_Rx_interrupt_control << USART_CR1_RXNEIE_Pos);
+	USARTx->CR1 &= (~USART_CR1_RXNEIE_Msk);
+	USARTx->CR1 |= (USART_Rx_interrupt_control << USART_CR1_RXNEIE_Pos);
 }
 void USART_Tx_Control(USART_TypeDef* USARTx, EN_USART_TX_CONTROL USART_Tx_control)
 {
-	USARTx->CR1 = USARTx->CR1 & (~USART_CR1_TE_Msk);
-	USARTx->CR1 = USARTx->CR1 | (USART_Tx_control << USART_CR1_TE_Pos);
+	USARTx->CR1 &= (~USART_CR1_TE_Msk);
+	USARTx->CR1 |= (USART_Tx_control << USART_CR1_TE_Pos);
 }
 void USART_Rx_Control(USART_TypeDef* USARTx, EN_USART_RX_CONTROL USART_Rx_control)
 {
@@ -112,6 +121,7 @@ void USART_Transmit(USART_TypeDef* USARTx, const char* data)
 	while( !( (USARTx->ISR >> USART_ISR_TC_Pos) & 1U) ) ;
 	USART_Tx_Control(USARTx, USART_TX_CONTROL_DISABLE);
 }
+#ifdef LAB9_MAIN_3_1_
 void USART3_IRQHandler(void)
 {
 	uint8_t ORE, NE, FE;
@@ -123,7 +133,18 @@ void USART3_IRQHandler(void)
 	temp = USART3->RDR;
 	if(!(ORE | NE | FE))
 	{
-		USART_Transmit(USART3, &temp);
+		if(temp == '\n' || temp == '\r')
+		{
+			LCD_ClearScreen();
+			LCD_Serial_Output(buffer);
+			strcat(buffer, " showed\n\r\0");
+			USART_Transmit(USART_InUse, buffer);
+			memset(buffer,'\0',32);
+			buffer_size = 0;
+		}
+		else
+			buffer[buffer_size++] = temp;
 	}
 	return;
 }
+#endif

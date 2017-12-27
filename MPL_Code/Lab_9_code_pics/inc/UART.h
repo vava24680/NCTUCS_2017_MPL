@@ -1,12 +1,19 @@
 #ifndef UART_H_
 #define UART_H_
 
-#ifndef STDINT_H_
-#define STDINT_H_
+#ifndef INCLUDE_STDINT_H_
+#define INCLUDE_STDINT_H_
 #include <stdint.h>
+#endif
+#ifndef INCLUDE_LCD_FUNCTION_H_
+#define INCLUDE_LCD_FUNCTION_H_
+#include "lcd_function.h"
 #endif
 #include <string.h>
 #include "gpio.h"
+#define USART_InUse USART3
+extern char buffer[];
+unsigned int buffer_size;
 typedef enum data_word_length
 {
 	USART_DATAWORD_8_BITS = 0U,
@@ -28,6 +35,11 @@ typedef enum parity_control
 	USART_PARITY_CONTROL_DISABLE = 0U,
 	USART_PARITY_CONTROL_ENABLE = 1U
 } EN_USART_PARITY_CONTROL;
+typedef enum transmit_interrupt_control
+{
+	USART_TX_INTERRUPT_DISABLE = 0U,
+	USART_TX_INTERRUPT_ENABLE = 1U
+} EN_USART_TX_INTERRUPT_CONTROL;
 typedef enum receive_interrupt_control
 {
 	USART_RX_INTERRUPT_DISABLE = 0U,
@@ -86,6 +98,7 @@ typedef enum usart_control
 void USART_Module_Init(void);
 void USART_GPIO_Init(void);
 void USART_Init(USART_TypeDef* USARTx, EN_USART_DATAWORD_LENGTH USART_DATAWORD_LENGTH, EN_USART_PARITY_SELECTION USART_PARITY_SELECTION, EN_USART_PARITY_CONTROL USART_PARITY_CONTROL, EN_USART_OVERSAMPLING_MODE_SELECTION USART_Oversampling_selection);
+void USART_Tx_Interrupt_Control(USART_TypeDef* USARTx, EN_USART_TX_INTERRUPT_CONTROL USART_Tx_interrupt_control);
 void USART_Rx_Interrupt_Control(USART_TypeDef* USARTx, EN_USART_RX_INTERRUPT_CONTROL USART_Rx_interrupt_control);
 void USART_Tx_Control(USART_TypeDef* USARTx, EN_USART_TX_CONTROL USART_Tx_control);
 void USART_Rx_Control(USART_TypeDef* USARTx, EN_USART_RX_CONTROL USART_Rx_control);
@@ -97,5 +110,7 @@ void USART_Hardware_Flow_Control(USART_TypeDef* USARTx, EN_USART_CTS_CONTROL USA
 void USART_Asy_Mode_Setting(USART_TypeDef* USARTx);
 void USART_Transmit(USART_TypeDef* USARTx, const char* data);
 void USART_Receive(USART_TypeDef* USARTx);
+#ifdef LAB9_MAIN_3_1_
 void USART3_IRQHandler(void);
+#endif
 #endif
