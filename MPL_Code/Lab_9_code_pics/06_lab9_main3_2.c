@@ -1,3 +1,5 @@
+#ifndef LAB9_MAIN_3_2_
+#define LAB9_MAIN_3_2_
 #ifndef INCLUDE_UART_H_
 #define INCLUDE_UART_H_
 #include "../inc/UART.h"
@@ -14,7 +16,10 @@
 #define INCLUDE_BUTTON_H_
 #include "../inc/button.h"
 #endif
+#ifndef INCLUDE_STDIO_H_
+#define INCLUDE_STDIO_H_
 #include "stdio.h"
+#endif
 #define ADC_InUse ADC1
 extern void STACK_INIT(void);
 extern int user_press_button(void);
@@ -28,37 +33,13 @@ void Essential_GPIO_init(void)
 	RCC->AHB2ENR = RCC->AHB2ENR | RCC_AHB2ENR_GPIOBEN;
 	return;
 }
-/*void SystemClock_Config(void)
-{
-	while( !( (RCC->CR >> RCC_CR_MSIRDY_Pos) & 0x01) );
-	RCC->CFGR &= (~RCC_CFGR_SW_Msk);
-	RCC->CFGR |= (0x00 << RCC_CFGR_SW_Pos);
-
-	RCC->CR = RCC->CR & (~RCC_CR_PLLON_Msk);
-	while( (RCC->CR >> RCC_CR_PLLRDY_Pos) & 0x01);
-	RCC->PLLCFGR &= (~RCC_PLLCFGR_PLLSRC_MSI_Msk);
-	RCC->PLLCFGR &= (~RCC_PLLCFGR_PLLN_Msk);
-	RCC->PLLCFGR &= (~RCC_PLLCFGR_PLLM_Msk);
-	RCC->PLLCFGR &= (~RCC_PLLCFGR_PLLR_Msk);
-	RCC->PLLCFGR = RCC->PLLCFGR | (1 << RCC_PLLCFGR_PLLSRC_MSI_Pos) | (40U << RCC_PLLCFGR_PLLN_Pos) | (0U << RCC_PLLCFGR_PLLM_Pos) | (0U << RCC_PLLCFGR_PLLR_Pos);
-	RCC->CR &= (~RCC_CR_PLLON_Msk);
-	RCC->CR |= (1 << RCC_CR_PLLON_Pos);
-
-	RCC->PLLCFGR &= (~RCC_PLLCFGR_PLLREN_Msk);
-	RCC->PLLCFGR &= (~RCC_PLLCFGR_PLLPEN_Msk);
-	RCC->PLLCFGR &= (~RCC_PLLCFGR_PLLQEN_Msk);
-	RCC->PLLCFGR = RCC->PLLCFGR | (1 << RCC_PLLCFGR_PLLREN_Pos) | (1 << RCC_PLLCFGR_PLLPEN_Pos) | (1 << RCC_PLLCFGR_PLLQEN_Pos);
-
-	while( !( (RCC->CR >> RCC_CR_PLLRDY_Pos) & 0x01) );
-
-	RCC->CFGR &= (~RCC_CFGR_SW_Msk);
-	RCC->CFGR |= (0x03 << RCC_CFGR_SW_Pos);
-}*/
 void ADC_Combination_Configure()
 {
 	ADC_GPIO_Init(GPIOB);
 	ADC_GPIO_ASCR_Control(GPIOB, 5U, GPIO_ASCR_CONNECT);
 	ADC_Clock_Control(ADC_CLOCK_ENABLE);
+	ADC_Peripheral_Clock_Setting(ADC_PERIPHERAL_CLOCK_SYSCLK);
+	ADC_BuiltIn_Common_Clock_Setting(ADC_InUse, ADC_BUILT_IN_COMMON_CLOCK_PERIPHERAL_CLOCK);
 	ADC_Init(ADC_InUse);
 	ADC_Calibration(ADC_InUse, ADC_SINGLE_ENDED_MODE);
 	ADC_ConvertionMode_Setting(ADC_InUse, ADC_Conversion_SingleMode);
@@ -114,3 +95,4 @@ int main(void)
 	}
 	return 0;
 }
+#endif
