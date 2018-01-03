@@ -103,5 +103,4 @@ void USART_Hardware_Flow_Control(USART_TypeDef* USARTx, EN_USART_CTS_CONTROL USA
 void USART_Asy_Mode_Setting(USART_TypeDef* USARTx);
 void USART_Transmit(USART_TypeDef* USARTx, const char* data);
 void USART_Receive(USART_TypeDef* USARTx);
-void USART3_IRQHandler(void);
 #endif
