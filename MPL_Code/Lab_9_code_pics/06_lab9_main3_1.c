@@ -33,6 +33,31 @@ void NVIC_USART3_ENABLE(void)
 	NVIC_SetPriority(USART3_IRQn, 46);
 	return;
 }
+void USART3_IRQHandler(void)
+{
+	uint8_t ORE, NE, FE;
+	char temp;
+	uint32_t ISR = USART3->ISR;
+	ORE = (ISR >> USART_ISR_ORE_Pos) & 1U;
+	NE = (ISR >> USART_ISR_NE_Pos) & 1U;
+	FE = (ISR >> USART_ISR_FE_Pos) & 1U;
+	temp = USART3->RDR;
+	if(!(ORE | NE | FE))
+	{
+		if(temp == '\n' || temp == '\r')
+		{
+			LCD_ClearScreen();
+			LCD_Serial_Output(buffer);
+			strcat(buffer, " showed\n\r\0");
+			USART_Transmit(USART_InUse, buffer);
+			memset(buffer,'\0',32);
+			buffer_size = 0;
+		}
+		else
+			buffer[buffer_size++] = temp;
+	}
+	return;
+}
 int main(void)
 {
 	Essential_GPIO_init();
