@@ -108,5 +108,4 @@ void ADC_SampleTime_Setting(ADC_TypeDef* ADCx,EN_ADC_SampleTime ADC_SampleTime, 
 void ADC_Enable(ADC_TypeDef* ADCx);
 void ADC_Disable(ADC_TypeDef* ADCx);
 void ADC_Start_Conversion(ADC_TypeDef* ADCx);
-//void ADC1_2_IRQHandler(void);
 #endif
